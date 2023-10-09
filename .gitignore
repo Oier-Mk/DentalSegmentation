@@ -4,3 +4,4 @@
 .vscode/
 #ignore the pychache files pyc
 **.pyc
+**.tfrecord
