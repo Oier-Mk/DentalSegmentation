@@ -7,3 +7,5 @@
 **.tfrecord
 #ignore de data folder
 data/
+#ignore the figures folder
+figures/
