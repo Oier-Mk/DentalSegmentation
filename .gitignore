@@ -9,3 +9,5 @@
 data/
 #ignore the figures folder
 figures/
+#ignore executables .exe
+**.exe
