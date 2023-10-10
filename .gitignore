@@ -5,3 +5,5 @@
 #ignore the pychache files pyc
 **.pyc
 **.tfrecord
+#ignore de data folder
+data/
