@@ -2,6 +2,8 @@
 **.DS_Store
 # ignore .vscode folder
 .vscode/
+#ignore .vs folder
+.vs/
 #ignore the pychache files pyc
 **.pyc
 **.tfrecord
@@ -11,3 +13,7 @@ data/
 figures/
 #ignore executables .exe
 **.exe
+#ignore build folder
+build/
+#ignore out folder
+out/
