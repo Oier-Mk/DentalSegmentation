@@ -47,13 +47,18 @@ std::vector<DicomImage*> loadAllDicom(std::string directory){
 }
 
 // Function that receives a vector of dicom images and return a 3d array of the whole 3d image
-unsigned short*** preprocessDicom(std::vector<DicomImage*> images)
+unsigned short*** preprocessDicom(std::vector<DicomImage*> images, std::vector<unsigned short>* sizes)
 {
     // Get the shape of the 3d image: vector size is the z (slices)
     int z = images.size();
     // The x and y are the same for all the images
     int x = images[0]->getWidth();
     int y = images[0]->getHeight();
+
+    // Save the sizes in the vector
+    sizes->push_back(x);
+    sizes->push_back(y);
+    sizes->push_back(z);
 
     // The 3d array should be indexed as [x][y][z]
     unsigned short*** image3d = new unsigned short**[x];
@@ -93,7 +98,6 @@ unsigned short*** preprocessDicom(std::vector<DicomImage*> images)
             // Handle error or return an appropriate value
         }
     }
-
     return image3d;
 }
 

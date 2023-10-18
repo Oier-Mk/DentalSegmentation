@@ -12,6 +12,5 @@
 
 
 std::vector<DicomImage*> loadAllDicom(std::string directory);
-unsigned short*** preprocessDicom(std::vector<DicomImage*> images);
-
+unsigned short*** preprocessDicom(std::vector<DicomImage*> images, std::vector<unsigned short>* sizes);
 #endif // !DICOM_HPP

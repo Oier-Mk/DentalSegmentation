@@ -8,8 +8,8 @@ extern "C" {
 
 
 nifti_image* loadNifti(std::string filename);
-unsigned short*** preprocessNifti(nifti_image* nii);
-nifti_image* postprocessNifti(unsigned short*** data);
+unsigned short*** preprocessNifti(nifti_image* nii, std::vector<unsigned short>* sizes);
+nifti_image* postprocessNifti(unsigned short*** data, std::vector<unsigned short>* sizes);
 void writeNifti(nifti_image* nii, std::string filename);
 
 #endif // !NIFTI_HPP

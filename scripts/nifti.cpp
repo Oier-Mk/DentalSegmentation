@@ -11,10 +11,7 @@ nifti_image* loadNifti(std::string filename)
     {
         std::cout << "Loaded " << filename << " succesfuly" << std::endl;
         //Print some info from the nii image loaded
-        std::cout << "Size of the image: " << nii->nvox << std::endl;
         std::cout << "Dimensions of the image: " << nii->nx << "," << nii->ny << "," << nii->nz << std::endl;
-        std::cout << "Data type of the image: " << nii->datatype << std::endl;
-        std::cout << "Number of bytes per voxel: " << nii->nbyper << std::endl;
         
         return nii;
     }
@@ -23,7 +20,7 @@ nifti_image* loadNifti(std::string filename)
 
 
 //Function that receives a pointer nifti_image and return a 3d array of the 3d mask
-unsigned short*** preprocessNifti(nifti_image* nii)
+unsigned short*** preprocessNifti(nifti_image* nii, std::vector<unsigned short>* sizes)
 {
     //Get the shape of the 3d image the vector size is the z (slices)
     int z = nii->nz;
@@ -31,7 +28,10 @@ unsigned short*** preprocessNifti(nifti_image* nii)
     int x = nii->nx;
     int y = nii->ny;
 
-    std::cout << "Size of the array: " << x << "," << y << "," << z << std::endl;
+    //Add the sizes to the vector
+    sizes->push_back(x);
+    sizes->push_back(y);
+    sizes->push_back(z);
 
     //The 3d array should be indexed as [x][y][z]
     unsigned short*** image3d = new unsigned short**[x];
@@ -57,16 +57,16 @@ unsigned short*** preprocessNifti(nifti_image* nii)
     return image3d;
 }
 
-nifti_image* postprocessNifti(unsigned short*** data){
+nifti_image* postprocessNifti(unsigned short*** data, std::vector<unsigned short>* sizes){
     std::cout << "Postprocessing nifti" << std::endl;
 
     //create a nifti_image
     nifti_image* nii = nifti_simple_init_nim();
 
     //fill the nifti_image with the data
-    int x = 764;
-    int y = 764;
-    int z = 603;
+    int x = sizes->at(0);
+    int y = sizes->at(1);
+    int z = sizes->at(2);
     nii->nx = x;
     nii->ny = y;
     nii->nz = z;

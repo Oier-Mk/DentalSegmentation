@@ -47,9 +47,9 @@
 int main()
 {
     /* ----------------------------------- DICOM ----------------------------------- */
-    // std::string directory = "data/Etiquetado_17682_20230302_152135";
+    std::string directory = "data/Etiquetado_17682_20230302_152135";
     // std::string directory = "data/Etiquetado_17689_20230307_084844";
-    std::string directory = "data/Etiquetado_17691_20230307_135251";
+    // std::string directory = "data/Etiquetado_17691_20230307_135251";
     // std::string directory = "data/Etiquetado_17705_20230313_144230";
 
     //Load all the dcm files
@@ -60,36 +60,43 @@ int main()
     //shape of the first image (rows,columns)
     std::cout << "Shape of the first image: " << images[0]->getHeight() << "," << images[0]->getWidth() << std::endl;
 
-    unsigned short *** img3darr = preprocessDicom(images);
+    //Create a vector of unsigned short for the size of the images
+    std::vector<unsigned short> img_sizes;
 
+    unsigned short *** img3darr = preprocessDicom(images, &img_sizes);
+    
     //Free the image vector
     for (int i = 0; i < images.size(); i++)
     {
         delete images[i];
     }
+    images.clear();
 
     /* ----------------------------------- NIFTI ----------------------------------- */
 
-    // std::string lbl_filename = "data/Etiquetado_17682_20230302_152135/Untitled.nii.gz";
+    std::string lbl_filename = "data/Etiquetado_17682_20230302_152135/Untitled.nii.gz";
     // std::string lbl_filename = "data/Etiquetado_17689_20230307_084844/Untitled.nii.gz";
-    std::string lbl_filename = "data/Etiquetado_17691_20230307_135251/Label.nii.gz";
+    // std::string lbl_filename = "data/Etiquetado_17691_20230307_135251/Label.nii.gz";
     // std::string lbl_filename = "data/Etiquetado_17705_20230313_144230/Untitled.nii.gz";
 
     nifti_image* lbl = loadNifti(lbl_filename);
 
-    unsigned short*** lbl3darr = preprocessNifti(lbl);
+    //Create a vector of unsigned short for the size of the images
+    std::vector<unsigned short> lbl_sizes;
+
+    unsigned short*** lbl3darr = preprocessNifti(lbl, &lbl_sizes);
 
     //Free the memory
     nifti_image_free(lbl);
 
     /* ----------------------------------- RED ----------------------------------- */
 
-    unsigned short*** seg3darr = nNet(img3darr, lbl3darr);
+    unsigned short*** seg3darr = nNet(img3darr, &img_sizes, lbl3darr);
 
     //Free the image and label 3d arrays
-    for (int i = 0; i < 764; i++)
+    for (int i = 0; i < img_sizes[0]; i++)
     {
-        for (int j = 0; j < 764; j++)
+        for (int j = 0; j < img_sizes[1]; j++)
         {
             delete[] img3darr[i][j];
             delete[] lbl3darr[i][j];
@@ -97,25 +104,31 @@ int main()
         delete[] img3darr[i];
         delete[] lbl3darr[i];
     }
+    
+    //Free the size vector of the label
+    lbl_sizes.clear();
 
     /* ----------------------------------- OUTPUT ----------------------------------- */
 
-    nifti_image* seg = postprocessNifti(seg3darr);
+    nifti_image* seg = postprocessNifti(seg3darr, &img_sizes);
 
     //Free the segmentation 3d array
-    for (int i = 0; i < 764; i++)
+    for (int i = 0; i < img_sizes[0]; i++)
     {
-        for (int j = 0; j < 764; j++)
+        for (int j = 0; j < img_sizes[1]; j++)
         {
             delete[] seg3darr[i][j];
         }
         delete[] seg3darr[i];
     }
 
+    //Free the size vector of the image
+    img_sizes.clear();
 
-    // writeNifti(seg, "/Users/mentxaka/Github/DentalSegmentation/data/res/135.nii.gz");
+
+    writeNifti(seg, "/Users/mentxaka/Github/DentalSegmentation/data/res/135.nii.gz");
     // writeNifti(seg, "/Users/mentxaka/Github/DentalSegmentation/data/res/884.nii.gz");
-    writeNifti(seg, "/Users/mentxaka/Github/DentalSegmentation/data/res/251.nii.gz");
+    // writeNifti(seg, "/Users/mentxaka/Github/DentalSegmentation/data/res/251.nii.gz");
     // writeNifti(seg, "/Users/mentxaka/Github/DentalSegmentation/data/res/230.nii.gz");
 
     //Free the nifti image memory
