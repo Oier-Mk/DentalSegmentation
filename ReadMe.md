@@ -18,6 +18,7 @@ build/dental_seg  -d data/Etiquetado_17682_20230302_152135 -n data/Etiquetado_17
 The main 2 libraries used in this project are DMCTK for the DICOM files and nifticlib for the NIFTI files. The code is written in C++ and compiled with CMake. The libraries can be found in the following links:
 - [DMCTK](https://dicom.offis.de/dcmtk.php.en)
 - [nifticlib](https://github.com/NIFTI-Imaging/nifti_clib)
+  
 Both libraries must be compiled and installed in the system before compiling the code of the dental segmentation project.
 
 ## How to compile
