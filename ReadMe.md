@@ -59,4 +59,5 @@ target_link_libraries(dental_seg PRIVATE
 	niftiio # Add NIfTI library here
 )
 ```
-
+## Extra: Python files
+There are some extra python files that are not necessary but provide some insight during development.
