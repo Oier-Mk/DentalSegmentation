@@ -20,7 +20,7 @@ The main 3 libraries used in this project are DMCTK for the DICOM files, nifticl
 - [nifticlib](https://github.com/NIFTI-Imaging/nifti_clib)
 - [Tensorflow](https://www.tensorflow.org/install/lang_c)
   
-All 3 libraries must be compiled and installed in the system before compiling the code of the dental segmentation project.
+The 2 first libraries must be compiled and installed in the system before compiling the code of the dental segmentation project.
 
 ## How to compile
 The code is compiled with CMake. A similar CMakeLists.txt file to this is neccessary to compile the code:
