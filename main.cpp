@@ -10,6 +10,7 @@ void show_usage(std::string name)
               << "\t-h,--help\t\tShow this help message\n"
               << "\t-d,--dicom DICOM_DIR\tSpecify the directory of the DICOM files (.dcm)\n"
               << "\t-n,--nifti NIFTI_FILE\tSpecify the NIFTI file with the original mask (.nii.gz)\n"
+              << "\t-m,--model MODEL_FILE\tSpecify the model file (.h5)\n"
               << "\t-o,--output OUTPUT_FILE\tSpecify the filename of the NIFTI fiel of the resulting mask (.nii.gz)\n"
               << std::endl;
 }
@@ -23,6 +24,7 @@ int main(int argc, char *argv[])
     std::string dicom_directory;
     std::string nifti_file;
     std::string exit_filename;
+    std::string model_filename;
     for (int i = 1; i < argc; ++i){
         std::string arg = argv[i];
         if ((arg == "-h") || (arg == "--help")){
@@ -47,6 +49,15 @@ int main(int argc, char *argv[])
                 return 1;
             }
         }
+        else if ((arg == "-m") || (arg == "--model")){
+            if (i + 1 < argc){
+                model_filename = argv[++i];
+            }
+            else{
+                std::cerr << "--model option requires one argument." << std::endl;
+                return 1;
+            }
+        }
         else if ((arg == "-o") || (arg == "--output")){
             if (i + 1 < argc){
                 exit_filename = argv[++i];
@@ -62,7 +73,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    if (dicom_directory.empty() || nifti_file.empty() || exit_filename.empty()){
+    if (dicom_directory.empty() || nifti_file.empty() || exit_filename.empty() || model_filename.empty()){
         std::cerr << "Missing arguments" << std::endl;
         return 1;
     }
@@ -70,14 +81,20 @@ int main(int argc, char *argv[])
     // std::string dicom_directory = "data/Etiquetado_17682_20230302_152135";
     // std::string nifti_file = "data/Etiquetado_17682_20230302_152135/Untitled.nii.gz";
     // std::string exit_filename = "data/res/135.nii.gz";
+    // std::string model_filename = "model/unet.h5"; 
 
-    // build/dental_seg  -d data/Etiquetado_17682_20230302_152135 -n data/Etiquetado_17682_20230302_152135/Untitled.nii.gz -o data/res/135.nii.gz
+    // build/dental_seg  -d data/Etiquetado_17682_20230302_152135 -n data/Etiquetado_17682_20230302_152135/Untitled.nii.gz -m model/unet.h5 -o data/res/135.nii.gz
 
     // print the 3 argvs
     std::cout << "Selected DICOM directory: " << dicom_directory << std::endl;
     std::cout << "NIFTI file of the mask: " << nifti_file << std::endl;
     std::cout << "Output_NIFIT_filename: " << exit_filename << std::endl;
+    std::cout << "Model filename: " << model_filename << std::endl;
 
+    // /* ----------------------------------- TEST ----------------------------------- */
+
+    // Call for the version of Tensorflow
+    // printTensorflowVersion();
 
     /* ----------------------------------- DICOM ----------------------------------- */
 
@@ -115,7 +132,7 @@ int main(int argc, char *argv[])
 
     /* ----------------------------------- RED ----------------------------------- */
 
-    unsigned short*** seg3darr = nNet(img3darr, &img_sizes, lbl3darr); //FIXME: As the network is not implemented, actually it just copies the input mask
+    unsigned short*** seg3darr = mockNNet(img3darr, &img_sizes, lbl3darr); //FIXME: As the network is not implemented, actually it just copies the input mask
 
     //Free the image and label 3d arrays
     for (int i = 0; i < img_sizes[0]; i++)
@@ -153,6 +170,7 @@ int main(int argc, char *argv[])
     
     //Free the nifti image memory
     nifti_image_free(seg);
+    
 
     return 0;
 }

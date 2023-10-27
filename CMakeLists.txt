@@ -12,6 +12,7 @@ file( GLOB  SOURCES
 include_directories(
 	"/Users/mentxaka/Dcmtk/dcmtk-3.6.7-install/usr/local/include"
 	"/Users/mentxaka/Nifti/nifti-install/usr/local/include"
+	"/Users/mentxaka/CTensorFlow/libtensorflow/include"
 )
 
  
@@ -20,6 +21,7 @@ include_directories(
 link_directories(
 	"/Users/mentxaka/Dcmtk/dcmtk-3.6.7-install/usr/local/lib"
 	"/Users/mentxaka/Nifti/nifti-install/usr/local/lib"
+	"/Users/mentxaka/CTensorFlow/libtensorflow/lib"
 )
 
 
@@ -35,5 +37,6 @@ target_link_libraries(dental_seg PRIVATE
 	oflog
 	iconv
 	dcmimgle
-	niftiio # Add NIfTI library here
+	niftiio
+	tensorflow
 )

@@ -11,9 +11,6 @@ std::vector<DicomImage*> loadAllDicom(std::string directory){
     //Gets the files. The first file ends with '_0.dcm' and the last file will end with '_num_files-1.dcm'
     std::string path = firstFilename.substr(0, firstFilename.find_last_of("/\\"));
     std::string filename = firstFilename.substr(firstFilename.find_last_of("/\\")+1, firstFilename.find_last_of("_")-firstFilename.find_last_of("/\\")-1);
-    
-    std::cout << "Path: " << path << std::endl;
-    std::cout << "Filename: " << filename << std::endl;
 
     std::vector<DicomImage*> images;
     int iter = 0;

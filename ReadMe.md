@@ -8,10 +8,11 @@ This repository contains the code for the pre and post processing of the dental 
 The code is compiled with CMake (recommended to build it in /build ). The executable dental_seg is created. The executable dental_seg has the following parameters:
 - -d, --dicom: Path to the directory containing the DICOM files.
 - -n, --nifti: Path to the NIFTI file containing the ground truth mask.
+- -m, --model: Path to the .H5 file containing the neural network model.
 - -o, --output: Path to the output NIFTI file containing the segmentation mask.
 An example on how to use the executable dental_seg is the following:
 ```
-build/dental_seg  -d data/Etiquetado_17682_20230302_152135 -n data/Etiquetado_17682_20230302_152135/Untitled.nii.gz -o data/res/135.nii.gz
+build/dental_seg  -d data/Etiquetado_17682_20230302_152135 -n data/Etiquetado_17682_20230302_152135/Untitled.nii.gz -m model/unet.h5 -o data/res/135.nii.gz
 ```
 
 ## Required libraries
@@ -64,3 +65,10 @@ target_link_libraries(dental_seg PRIVATE
 ```
 ## Extra: Python files
 There are some extra python files that are not necessary but provide some insight during development.
+
+## Fixes & TO - DO
+- [ ] Fix the std:: error. The code seems to not find the std namespace in some installations of the project.
+- [ ] Fix the issue with the Tensorflow library. The Tensorflow library is not working properly on the MACOS system due to incompatibility with newer versions of the MACOS system. (Try using a Docker container with a Linux system).
+- [ ] TO DO: Add the croping mechanism for the 3D img.
+- [ ] TO DO: Test thoroughly the Tensorflow H5 model loading and inference.
+

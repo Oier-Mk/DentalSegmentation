@@ -9,6 +9,8 @@
 **.tfrecord
 #ignore de data folder
 data/
+#ignore de model folder
+model/
 #ignore the figures folder
 figures/
 #ignore executables .exe
