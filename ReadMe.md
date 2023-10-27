@@ -15,11 +15,12 @@ build/dental_seg  -d data/Etiquetado_17682_20230302_152135 -n data/Etiquetado_17
 ```
 
 ## Required libraries
-The main 2 libraries used in this project are DMCTK for the DICOM files and nifticlib for the NIFTI files. The code is written in C++ and compiled with CMake. The libraries can be found in the following links:
+The main 3 libraries used in this project are DMCTK for the DICOM files, nifticlib for the NIFTI files and Tensorflow C for using the AI model. The code is written in C++ and compiled with CMake. The libraries can be found in the following links:
 - [DMCTK](https://dicom.offis.de/dcmtk.php.en)
 - [nifticlib](https://github.com/NIFTI-Imaging/nifti_clib)
+- [Tensorflow](https://www.tensorflow.org/install/lang_c)
   
-Both libraries must be compiled and installed in the system before compiling the code of the dental segmentation project.
+All 3 libraries must be compiled and installed in the system before compiling the code of the dental segmentation project.
 
 ## How to compile
 The code is compiled with CMake. A similar CMakeLists.txt file to this is neccessary to compile the code:
@@ -35,19 +36,20 @@ file( GLOB  SOURCES
 include_directories(
 	"installation_dir_of_dcmtk_lib/include"
 	"installation_dir_of_nifti_lib/include"
+	"installation_dir_of_tensorflow_lib/include"
 )
 
 # Include link directories for external libraries
 link_directories(
 	"installation_dir_of_dcmtk_lib/lib"
 	"installation_dir_of_nifti_lib/lib"
+	"installation_dir_of_tensorflow_lib/lib"
 )
 
 
 # Your executable
 add_executable(dental_seg main.cpp ${SOURCES})
 
- 
 
 # Link the libraries
 target_link_libraries(dental_seg PRIVATE
@@ -56,7 +58,8 @@ target_link_libraries(dental_seg PRIVATE
 	oflog
 	iconv
 	dcmimgle
-	niftiio # Add NIfTI library here
+	niftiio
+	#tensorflow
 )
 ```
 ## Extra: Python files
