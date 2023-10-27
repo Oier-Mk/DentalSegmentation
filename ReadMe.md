@@ -59,7 +59,7 @@ target_link_libraries(dental_seg PRIVATE
 	iconv
 	dcmimgle
 	niftiio
-	#tensorflow
+	tensorflow
 )
 ```
 ## Extra: Python files
