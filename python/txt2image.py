@@ -1,12 +1,14 @@
 import os
 import numpy as np
 #function that passing a txt with the pixel value of the image, it creates a numpy array
-def txt2nparray(txt_file):
+#omit thr first line of the txt file
+def txt2nparray(txt_file, skip = 3):
     with open(txt_file, 'r') as f:
         data = f.readlines()
+    data = data[skip:]
     data = [line.strip() for line in data]
     data = [line.split() for line in data]
-    data = np.array(data, dtype=np.float32)
+    data = np.array(data, dtype=np.int16)
     return data
 
 
@@ -25,12 +27,15 @@ def plot_data_label(data, label):
     plt.imshow(data, cmap=plt.cm.bone)
     plt.imshow(label, cmap=plt.cm.Reds, alpha=0.4)
     plt.axis('off')
-    plt.savefig(os.path.join(save_dir, f'C211.png'))
+    plt.savefig(os.path.join(save_dir, f'Plotted_crop.png'))
     plt.close()
 
 def main():
-    mask = txt2nparray('/Users/mentxaka/Github/DentalSegmentation/mask.txt')
-    image = txt2nparray('/Users/mentxaka/Github/DentalSegmentation/image.txt')
+    mask = txt2nparray('/Users/mentxaka/Github/DentalSegmentation/data/res/lbl_slice.txt')
+    image = txt2nparray('/Users/mentxaka/Github/DentalSegmentation/data/res/img_slice.txt')
+
+    print(mask.shape)
+    print(image.shape)
 
     plot_data_label(image, mask)
 

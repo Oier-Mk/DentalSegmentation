@@ -3,6 +3,7 @@ This repository contains the code for the pre and post processing of the dental 
 - Preprocessing of the DICOM files into short 3D arrays to feed the neural network.
 - Preprocessing of the ground truth masks (NIIFTI format) into short 3D arrays to feed the neural network.
 - Postprocessing of the neural network output (short 3D arrays) into the final segmentation masks in NIFTI format.
+- Utils for the pre and post processing of the data. e.g. Cropping the data.
 
 ## How to use
 The code is compiled with CMake (recommended to build it in /build ). The executable dental_seg is created. The executable dental_seg has the following parameters:
@@ -69,6 +70,5 @@ There are some extra python files that are not necessary but provide some insigh
 ## Fixes & TO - DO
 - [ ] Fix the std:: error. The code seems to not find the std namespace in some installations of the project.
 - [ ] Fix the issue with the Tensorflow library. The Tensorflow library is not working properly on the MACOS system due to incompatibility with newer versions of the MACOS system. (Try using a Docker container with a Linux system).
-- [ ] TO DO: Add the croping mechanism for the 3D img.
 - [ ] TO DO: Test thoroughly the Tensorflow H5 model loading and inference.
 

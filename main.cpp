@@ -2,6 +2,7 @@
 #include "scripts/dicom.hpp"
 #include "scripts/nifti.hpp"
 #include "scripts/n_net.hpp"
+#include "scripts/utils.hpp"
 
 void show_usage(std::string name)
 {
@@ -130,9 +131,20 @@ int main(int argc, char *argv[])
     //Free the memory
     nifti_image_free(lbl);
 
-    /* ----------------------------------- RED ----------------------------------- */
+    /* ----------------------------------- CROPPING ----------------------------------- */
 
-    unsigned short*** seg3darr = mockNNet(img3darr, &img_sizes, lbl3darr); //FIXME: As the network is not implemented, actually it just copies the input mask
+    // Crop the image and the label to a 300x300x300 cube starting in the 1000x100x100 coordinates
+    
+    std::vector<unsigned short> img_crop_sizes;
+    img_crop_sizes.push_back(300);
+    img_crop_sizes.push_back(300);
+    img_crop_sizes.push_back(300);
+    std::vector<unsigned short> img_crop_coords;
+    img_crop_coords.push_back(100);
+    img_crop_coords.push_back(100);
+    img_crop_coords.push_back(100);
+    unsigned short*** cropped_img = crop3D(img3darr, &img_sizes, &img_crop_sizes, img_crop_coords);
+    unsigned short*** cropped_lbl = crop3D(lbl3darr, &lbl_sizes, &img_crop_sizes, img_crop_coords);
 
     //Free the image and label 3d arrays
     for (int i = 0; i < img_sizes[0]; i++)
@@ -145,31 +157,52 @@ int main(int argc, char *argv[])
         delete[] img3darr[i];
         delete[] lbl3darr[i];
     }
+
+    // Write the 160 slice in the z axis of the cropped image
+    write_arr_slice(cropped_img, &img_crop_sizes, 160, 2, "data/res/img_slice.txt");
+    // Same slice for the cropped label
+    write_arr_slice(cropped_lbl, &img_crop_sizes, 160, 2, "data/res/lbl_slice.txt");
+
+    // /* ----------------------------------- RED ----------------------------------- */
+
+    // unsigned short*** seg3darr = mockNNet(img3darr, &img_sizes, lbl3darr); //FIXME: As the network is not implemented, actually it just copies the input mask
+
+    // //Free the image and label 3d arrays
+    // for (int i = 0; i < img_sizes[0]; i++)
+    // {
+    //     for (int j = 0; j < img_sizes[1]; j++)
+    //     {
+    //         delete[] img3darr[i][j];
+    //         delete[] lbl3darr[i][j];
+    //     }
+    //     delete[] img3darr[i];
+    //     delete[] lbl3darr[i];
+    // }
     
-    //Free the size vector of the label
-    lbl_sizes.clear();
+    // //Free the size vector of the label
+    // lbl_sizes.clear();
 
-    /* ----------------------------------- OUTPUT ----------------------------------- */
+    // /* ----------------------------------- OUTPUT ----------------------------------- */
 
-    nifti_image* seg = postprocessNifti(seg3darr, &img_sizes);
+    // nifti_image* seg = postprocessNifti(seg3darr, &img_sizes);
 
-    //Free the segmentation 3d array
-    for (int i = 0; i < img_sizes[0]; i++)
-    {
-        for (int j = 0; j < img_sizes[1]; j++)
-        {
-            delete[] seg3darr[i][j];
-        }
-        delete[] seg3darr[i];
-    }
+    // //Free the segmentation 3d array
+    // for (int i = 0; i < img_sizes[0]; i++)
+    // {
+    //     for (int j = 0; j < img_sizes[1]; j++)
+    //     {
+    //         delete[] seg3darr[i][j];
+    //     }
+    //     delete[] seg3darr[i];
+    // }
 
-    //Free the size vector of the image
-    img_sizes.clear();
+    // //Free the size vector of the image
+    // img_sizes.clear();
 
-    writeNifti(seg, exit_filename);
+    // writeNifti(seg, exit_filename);
     
-    //Free the nifti image memory
-    nifti_image_free(seg);
+    // //Free the nifti image memory
+    // nifti_image_free(seg);
     
 
     return 0;
